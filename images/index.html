@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Raster Graphics - Yixia Yu</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background-image: url('background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .foreground {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 30vw;
+        height: auto;
+      }
+
+      .caption {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 2.2em;
+        font-style: italic;
+        color: #fff;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 18px 35px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .back-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 1em;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+
+      .back-btn:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="back-btn" href="../index.html">Back to Assignments</a>
+
+    <h1 class="caption">Wandering Through the Colorful Streets in Guanajuato</h1>
+
+    <img
+      class="foreground"
+      src="foreground-480.png"
+      srcset="foreground-480.png 480w, foreground-960.png 960w, foreground-1440.png 1440w"
+      width="480"
+      height="640"
+      alt="A decontextualized photo of me placed in Guanajuato"
+    >
+  </body>
+</html>
