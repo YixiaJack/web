@@ -19,16 +19,179 @@
         font-size: 2em;
         margin-bottom: 10px;
       }
+
+      /* SVG Logo Styles */
+      .logo {
+        display: block;
+        margin: 30px auto;
+      }
+
+      /* SVG transition for smooth hover effects */
+      svg a circle,
+      svg a polygon,
+      svg a line,
+      svg a path,
+      svg a text {
+        transition: all 0.3s ease;
+      }
+
+      svg a {
+        cursor: pointer;
+      }
+
+      /* Sun hover: glow bigger and brighter */
+      svg a:hover .sun {
+        fill: #ffe066;
+        r: 30;
+        filter: drop-shadow(0 0 10px #f5c542);
+      }
+
+      svg a:active .sun {
+        fill: #cc9900;
+        r: 22;
+      }
+
+      /* Sun rays hover: thicker, brighter, longer */
+      svg a:hover .sun-rays {
+        stroke: #ffe680;
+        stroke-width: 4;
+        opacity: 1;
+      }
+
+      svg a:active .sun-rays {
+        stroke: #cc9900;
+        stroke-width: 1;
+      }
+
+      /* Sun glow hover */
+      svg a:hover .sun-glow {
+        fill: #f5c54260;
+        r: 45;
+      }
+
+      /* Island hover: sand lights up, lifts slightly */
+      svg a:hover .island-shape {
+        fill: #e8b87a;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        transform: translateY(-3px);
+      }
+
+      svg a:active .island-shape {
+        fill: #a07040;
+        transform: translateY(1px);
+      }
+
+      /* Island highlight hover */
+      svg a:hover .island-highlight {
+        fill: #f0c88a;
+        opacity: 0.7;
+      }
+
+      /* Tree trunk hover: lighten */
+      svg a:hover .tree-trunk {
+        stroke: #a07020;
+        stroke-width: 6;
+      }
+
+      svg a:active .tree-trunk {
+        stroke: #4a3010;
+      }
+
+      /* Tree leaf hover: brighten green */
+      svg a:hover .tree-leaf {
+        stroke: #40c060;
+        stroke-width: 4;
+      }
+
+      svg a:active .tree-leaf {
+        stroke: #1a6030;
+      }
     </style>
   </head>
   <body>
     <h1>Introduction to Web Design</h1>
     <p style="color: #555; font-size: 18px; text-align: center; max-width: 700px; margin: 0 auto 30px auto;">Hello, my name is Yixia Yu. I am a junior majoring in Math and Computer Science. I am a student learning web design and development.</p>
+
+    <!-- SVG Vector Graphic Logo -->
+    <svg class="logo" width="300" height="300" viewBox="0 0 300 300">
+      <title>游岛 - A travel island logo designed by Yixia Yu, featuring an island with a palm tree, sun, and ocean waves</title>
+
+      <!-- Outer badge ring -->
+      <circle cx="150" cy="150" r="145" fill="none" stroke="#d4a853" stroke-width="4"/>
+
+      <!-- Ocean background -->
+      <circle cx="150" cy="150" r="140" fill="#1a3a5c"/>
+
+      <!-- Link 1: Sun - links to Raster Graphics page -->
+      <a href="./images/index.html">
+        <!-- Sun glow -->
+        <circle class="sun-glow" cx="210" cy="80" r="38" fill="#f5c54220"/>
+        <!-- Sun body -->
+        <circle class="sun" cx="210" cy="80" r="25" fill="#f5c542"/>
+        <!-- Sun rays -->
+        <line class="sun-rays" x1="210" y1="48" x2="210" y2="38" stroke="#f5c542" stroke-width="2" stroke-linecap="round"/>
+        <line class="sun-rays" x1="238" y1="62" x2="245" y2="55" stroke="#f5c542" stroke-width="2" stroke-linecap="round"/>
+        <line class="sun-rays" x1="245" y1="80" x2="252" y2="80" stroke="#f5c542" stroke-width="2" stroke-linecap="round"/>
+        <line class="sun-rays" x1="238" y1="98" x2="245" y2="105" stroke="#f5c542" stroke-width="2" stroke-linecap="round"/>
+        <line class="sun-rays" x1="182" y1="62" x2="175" y2="55" stroke="#f5c542" stroke-width="2" stroke-linecap="round"/>
+        <line class="sun-rays" x1="175" y1="80" x2="168" y2="80" stroke="#f5c542" stroke-width="2" stroke-linecap="round"/>
+      </a>
+
+      <!-- Ocean waves -->
+      <path d="M15 185 Q45 175, 75 185 T135 185 T195 185 T255 185 T290 185" stroke="#4db8d1" fill="none" stroke-width="2" opacity="0.6"/>
+      <path d="M10 195 Q50 185, 80 195 T140 195 T200 195 T260 195 T290 195" stroke="#4db8d1" fill="none" stroke-width="2" opacity="0.4"/>
+      <path d="M15 205 Q55 195, 85 205 T145 205 T205 205 T265 205 T290 205" stroke="#4db8d1" fill="none" stroke-width="2" opacity="0.3"/>
+
+      <!-- Link 2: Main island + tree - links to CSS page -->
+      <a href="./css/index.html">
+        <!-- Main island sand -->
+        <polygon class="island-shape" points="90,180 110,155 150,140 200,150 225,180" fill="#c4915e"/>
+        <polygon class="island-highlight" points="105,175 125,158 155,148 190,155 210,175" fill="#d4a86e" opacity="0.5"/>
+        <!-- Palm tree trunk -->
+        <path class="tree-trunk" d="M155 140 Q150 110, 145 80" stroke="#6b4c14" fill="none" stroke-width="5" stroke-linecap="round"/>
+        <path class="tree-trunk" d="M155 140 Q152 125, 148 110" stroke="#8b6914" fill="none" stroke-width="4" stroke-linecap="round"/>
+        <!-- Palm tree leaves -->
+        <path class="tree-leaf" d="M145 80 Q110 65, 95 85" stroke="#2d8a4e" fill="none" stroke-width="3" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M145 80 Q115 55, 100 65" stroke="#3a9e5a" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M145 80 Q165 55, 185 65" stroke="#2d8a4e" fill="none" stroke-width="3" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M145 80 Q170 45, 190 50" stroke="#3a9e5a" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M145 80 Q130 50, 120 55" stroke="#3a9e5a" fill="none" stroke-width="2" stroke-linecap="round"/>
+        <!-- Coconuts -->
+        <circle cx="148" cy="83" r="4" fill="#5a3e0a"/>
+        <circle cx="142" cy="87" r="3.5" fill="#6b4c14"/>
+      </a>
+
+      <!-- Link 3: Small island left - links to HTML page -->
+      <a href="./me/index.html">
+        <polygon class="island-shape" points="30,175 45,162 65,168 75,175" fill="#9a7545" opacity="0.7"/>
+        <path class="tree-trunk" d="M50 162 Q48 150, 46 142" stroke="#5a3e0a" fill="none" stroke-width="2" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M46 142 Q35 136, 30 145" stroke="#2d8a4e" fill="none" stroke-width="2" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M46 142 Q55 134, 60 140" stroke="#3a9e5a" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+      </a>
+
+      <!-- Link 4: Small island right - links to Raster Graphics page -->
+      <a href="./images/index.html">
+        <polygon class="island-shape" points="235,170 250,158 270,163 278,170" fill="#9a7545" opacity="0.6"/>
+        <path class="tree-trunk" d="M255 158 Q253 147, 252 140" stroke="#5a3e0a" fill="none" stroke-width="2" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M252 140 Q242 134, 238 142" stroke="#2d8a4e" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+        <path class="tree-leaf" d="M252 140 Q262 133, 266 139" stroke="#3a9e5a" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+      </a>
+
+      <!-- Decorative star in sky -->
+      <rect x="80" y="70" width="4" height="4" fill="#fff" opacity="0.6" transform="rotate(45 82 72)"/>
+      <rect x="120" y="50" width="3" height="3" fill="#fff" opacity="0.4" transform="rotate(45 121.5 51.5)"/>
+      <rect x="60" y="100" width="3" height="3" fill="#fff" opacity="0.5" transform="rotate(45 61.5 101.5)"/>
+
+      <!-- Student initials -->
+      <text x="150" y="250" text-anchor="middle" font-size="36" fill="#d4a853" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="bold" letter-spacing="10">YY</text>
+
+    </svg>
+
     <ul style="list-style-type: square; padding-left: 40px; max-width: 500px; margin: 0 auto;">
       <li><a href="./me/index.html">HTML</a></li>
       <li><a href="./css/index.html">CSS</a></li>
       <li><a href="./images/index.html">Raster Graphics</a></li>
-      <li>Vector Graphics</li>
+      <li><a href="./index.html">Vector Graphics</a></li>
       <li>Website Layout</li>
       <li>Responsive Design</li>
       <li>JavaScript</li>
