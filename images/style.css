@@ -49,3 +49,21 @@ a.back-btn {
 a.back-btn:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
+
+/* The wandering label is filled in by ../js/random-position.js
+   each time the page loads. */
+#position-label {
+  position: fixed;
+  bottom: 14px;
+  right: 18px;
+  margin: 0;
+  color: #fff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85em;
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 6px 12px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+

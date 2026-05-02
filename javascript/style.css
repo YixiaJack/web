@@ -1,0 +1,772 @@
+/* Web Font */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('playfair-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('playfair-bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   THEME VARIABLES — toggled by ./js/color-mode.js
+   The default is the light palette; [data-theme="dark"] on
+   <html> swaps every variable to its dark counterpart. Every
+   color used in the site reads from these variables, so the
+   transition is global and automatic.
+   ============================================================ */
+:root {
+  --bg: #f5f0eb;
+  --text: #2c2c2c;
+  --text-muted: #555;
+  --header-bg: #1a1a2e;
+  --header-text: #e0d6c8;
+  --header-text-muted: #c8b89a;
+  --nav-bg: #16213e;
+  --nav-link: #c8b89a;
+  --nav-link-hover-bg: #0f3460;
+  --nav-link-hover-text: #fff;
+  --accent: #0a84ff;
+  --accent-soft: rgba(10, 132, 255, 0.12);
+  --accent-strong: #0066cc;
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.08);
+  --border-soft: #ddd;
+  --input-bg: #f9f6f1;
+  --input-border: #c8b89a;
+  --footer-bg: #1a1a2e;
+  --footer-text: #a09880;
+  --diagram-bg: #f0f4fa;
+  --diagram-stroke: #1a1a2e;
+  --diagram-fill: #ffffff;
+  --diagram-active: #0a84ff;
+  --diagram-active-bg: #cfe3ff;
+  --diagram-hover-bg: #e3edfb;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --text: #e6e6e6;
+  --text-muted: #b0b0b0;
+  --header-bg: #050811;
+  --header-text: #e0d6c8;
+  --header-text-muted: #8a8270;
+  --nav-bg: #0a0f1c;
+  --nav-link: #b0a890;
+  --nav-link-hover-bg: #1a2540;
+  --nav-link-hover-text: #ffffff;
+  --accent: #4ea1ff;
+  --accent-soft: rgba(78, 161, 255, 0.16);
+  --accent-strong: #79b8ff;
+  --card-bg: #1a1f2c;
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --border-soft: #2a3142;
+  --input-bg: #161b25;
+  --input-border: #2a3142;
+  --footer-bg: #050811;
+  --footer-text: #6a6450;
+  --diagram-bg: #161b25;
+  --diagram-stroke: #b0c4e0;
+  --diagram-fill: #0d1117;
+  --diagram-active: #4ea1ff;
+  --diagram-active-bg: #1c3252;
+  --diagram-hover-bg: #14223a;
+}
+
+/* ============================================================
+   MOBILE-FIRST: single-column fluid layout.
+   ============================================================ */
+html {
+  font-size: 16px;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-columns: 100%;
+  min-height: 100vh;
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--text);
+  background-color: var(--bg);
+  line-height: 1.8;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Header */
+header {
+  position: relative;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  padding: 6% 6%;
+  transition: background-color 0.4s ease;
+}
+
+.back-btn {
+  display: inline-block;
+  color: var(--header-text-muted);
+  text-decoration: none;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.back-btn:hover {
+  color: #fff;
+}
+
+.back-btn::before {
+  content: "\2190 ";
+}
+
+header h1 {
+  font-size: 1.4em;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+header p {
+  font-size: 0.9em;
+  opacity: 0.75;
+}
+
+/* Color-mode toggle button — sits in the top-right of every header */
+.color-mode-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--header-text-muted);
+  background-color: transparent;
+  color: var(--header-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.color-mode-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: #fff;
+  transform: rotate(20deg);
+}
+
+.color-mode-toggle svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The two icons live inside the same button; .icon-sun is shown
+   in dark mode (you click it to go back to light), .icon-moon in
+   light mode. JS does not need to swap markup — CSS handles it. */
+.icon-sun { display: none; }
+.icon-moon { display: block; }
+[data-theme="dark"] .icon-sun { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+
+/* Navigation */
+nav {
+  background-color: var(--nav-bg);
+  transition: background-color 0.4s ease;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  flex: 1 1 50%;
+  min-width: 0;
+}
+
+nav ul li a {
+  display: block;
+  color: var(--nav-link);
+  text-decoration: none;
+  padding: 12px 10px;
+  font-size: 0.85em;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: var(--nav-link-hover-bg);
+  color: var(--nav-link-hover-text);
+}
+
+nav ul li a.active {
+  background-color: var(--nav-link-hover-bg);
+  color: var(--nav-link-hover-text);
+  border-bottom: 3px solid var(--accent);
+}
+
+/* Main content */
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 30px;
+  width: 92%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8% 0;
+}
+
+article {
+  line-height: 1.85;
+}
+
+article h2 {
+  font-size: 1.35em;
+  color: var(--text);
+  margin-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 6px;
+}
+
+article h3 {
+  font-size: 1.1em;
+  color: var(--text);
+  margin: 22px 0 10px;
+}
+
+article p {
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+article p code,
+aside code,
+.diagram-panel code {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background-color: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* Sidebar */
+aside {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px var(--card-shadow);
+  align-self: start;
+  transition: background-color 0.4s ease;
+}
+
+aside h3 {
+  font-size: 1.05em;
+  color: var(--text);
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 6px;
+}
+
+aside h3:not(:first-child) {
+  margin-top: 20px;
+}
+
+aside p {
+  font-size: 0.9em;
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+}
+
+aside ul {
+  list-style: disc;
+  padding-left: 20px;
+  font-size: 0.9em;
+  line-height: 1.9;
+  color: var(--text-muted);
+}
+
+aside ul strong {
+  color: var(--text);
+}
+
+/* Image / diagram feature */
+.image-feature {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 22px 0;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  transition: background-color 0.4s ease;
+}
+
+.image-feature .caption {
+  flex: 1;
+  font-size: 0.9em;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.image-feature .caption strong {
+  display: block;
+  color: var(--text);
+  margin-bottom: 5px;
+  font-size: 1.02em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ============================================================
+   INTRO-PAGE comparison diagram (index.html).
+   Plain SVG; classes here so we can read CSS variables.
+   ============================================================ */
+.intro-diagram {
+  width: 100%;
+  height: auto;
+  background-color: var(--diagram-bg);
+  border-radius: 8px;
+  transition: background-color 0.4s ease;
+}
+
+.intro-diagram .intro-title {
+  fill: var(--diagram-stroke);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.intro-diagram .intro-box {
+  fill: var(--diagram-fill);
+  stroke: var(--diagram-stroke);
+  stroke-width: 2;
+}
+
+.intro-diagram .intro-text {
+  fill: var(--diagram-stroke);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+}
+
+.intro-diagram .intro-arrow {
+  stroke: var(--diagram-stroke);
+  stroke-width: 1.8;
+  fill: none;
+}
+
+.intro-diagram .arrow-head {
+  fill: var(--diagram-stroke);
+}
+
+/* ============================================================
+   ARCHITECTURE-PAGE INTERACTIVE DIAGRAM
+   The diagram is an inline SVG; each .jepa-part is a clickable
+   group. main.js toggles the .is-active class to highlight the
+   selected component, and rewrites #diagram-info text content.
+   ============================================================ */
+.jepa-diagram {
+  width: 100%;
+  height: auto;
+  background-color: var(--diagram-bg);
+  border-radius: 8px;
+  display: block;
+  margin-bottom: 16px;
+  transition: background-color 0.4s ease;
+}
+
+.jepa-part {
+  cursor: pointer;
+}
+
+.jepa-part rect,
+.jepa-part circle {
+  fill: var(--diagram-fill);
+  stroke: var(--diagram-stroke);
+  stroke-width: 2;
+  transition: fill 0.25s ease, stroke 0.25s ease, stroke-width 0.25s ease;
+}
+
+.jepa-part text {
+  fill: var(--diagram-stroke);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  transition: fill 0.25s ease;
+}
+
+.jepa-part.is-hover rect,
+.jepa-part.is-hover circle {
+  fill: var(--diagram-hover-bg);
+}
+
+.jepa-part.is-active rect,
+.jepa-part.is-active circle {
+  fill: var(--diagram-active-bg);
+  stroke: var(--diagram-active);
+  stroke-width: 3.5;
+}
+
+.jepa-part.is-active text {
+  fill: var(--diagram-active);
+}
+
+.diagram-arrow {
+  fill: none;
+  stroke: var(--diagram-stroke);
+  stroke-width: 1.8;
+  marker-end: url(#arrowhead);
+  transition: stroke 0.4s ease;
+}
+
+.diagram-label {
+  fill: var(--text-muted);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  transition: fill 0.4s ease;
+}
+
+.diagram-panel {
+  background-color: var(--card-bg);
+  border-left: 4px solid var(--accent);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+.diagram-panel h4 {
+  color: var(--accent-strong);
+  font-size: 1.05em;
+  margin-bottom: 8px;
+}
+
+.diagram-panel p {
+  font-size: 0.92em;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.diagram-hint {
+  font-size: 0.82em;
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* ============================================================
+   GENERATIVE-vs-JEPA toggle (Variants page).
+   Two buttons, two panels of text. main.js (or a small inline
+   handler) swaps which panel is .is-shown.
+   ============================================================ */
+.compare-toggle {
+  display: flex;
+  gap: 10px;
+  margin: 18px 0 12px;
+  flex-wrap: wrap;
+}
+
+.compare-toggle button {
+  flex: 1 1 140px;
+  padding: 10px 14px;
+  background-color: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border-soft);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.compare-toggle button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.compare-toggle button.is-active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.compare-panel {
+  display: none;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 18px 22px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  transition: background-color 0.4s ease;
+}
+
+.compare-panel.is-shown {
+  display: block;
+}
+
+.compare-panel h4 {
+  color: var(--accent-strong);
+  margin-bottom: 8px;
+  font-size: 1.05em;
+}
+
+.compare-panel p {
+  font-size: 0.95em;
+  line-height: 1.75;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   FORM (contact page)
+   ============================================================ */
+.contact-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  background-color: var(--card-bg);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px var(--card-shadow);
+  transition: background-color 0.4s ease;
+}
+
+.contact-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: var(--text);
+  font-size: 0.95em;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95em;
+  background-color: var(--input-bg);
+  color: var(--text);
+}
+
+.contact-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.contact-form .radio-group,
+.contact-form .checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.92em;
+  color: var(--text-muted);
+}
+
+.contact-form .radio-group label,
+.contact-form .checkbox-group label {
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.contact-form button {
+  padding: 12px 20px;
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.contact-form button:hover {
+  background-color: var(--accent-strong);
+}
+
+/* Media page */
+.media-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px var(--card-shadow);
+  margin-bottom: 25px;
+  transition: background-color 0.4s ease;
+}
+
+.media-card h3 {
+  font-size: 1.1em;
+  color: var(--text);
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 6px;
+}
+
+.media-card audio,
+.media-card video {
+  width: 100%;
+  display: block;
+  margin: 12px 0;
+  border-radius: 6px;
+}
+
+.media-card p {
+  font-size: 0.92em;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Footer */
+footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  text-align: center;
+  padding: 20px 6%;
+  font-size: 0.85em;
+  transition: background-color 0.4s ease;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   BREAKPOINT 1: Tablet (≥ 600px)
+   ============================================================ */
+@media (min-width: 600px) {
+  header {
+    padding: 30px 5%;
+  }
+
+  header h1 {
+    font-size: 1.7em;
+  }
+
+  header p {
+    font-size: 0.95em;
+  }
+
+  nav ul li {
+    flex: 0 1 auto;
+  }
+
+  nav ul li a {
+    padding: 14px 24px;
+    font-size: 0.95em;
+  }
+
+  main {
+    padding: 40px 0;
+    gap: 35px;
+  }
+
+  article h2 {
+    font-size: 1.5em;
+  }
+
+  .contact-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contact-form .full-row {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ============================================================
+   BREAKPOINT 2: Desktop (≥ 900px)
+   ============================================================ */
+@media (min-width: 900px) {
+  main {
+    grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+    gap: 40px;
+    width: 92%;
+  }
+
+  header {
+    padding: 35px 6%;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
+
+  article h2 {
+    font-size: 1.6em;
+  }
+
+  article h3 {
+    font-size: 1.2em;
+  }
+
+  aside {
+    padding: 25px;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+  }
+
+  .media-grid .media-card {
+    margin-bottom: 0;
+  }
+}
+
+/* ============================================================
+   BREAKPOINT 3: Large desktop (≥ 1200px)
+   ============================================================ */
+@media (min-width: 1200px) {
+  main {
+    gap: 50px;
+  }
+}

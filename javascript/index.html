@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEPA — Yann LeCun's Joint Embedding Predictive Architecture</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="js/color-mode.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="back-btn" href="../index.html">Back to Assignments</a>
+      <h1>JEPA</h1>
+      <p>Yann LeCun's Joint Embedding Predictive Architecture &mdash; a path to machines that understand the world</p>
+
+      <button class="color-mode-toggle" type="button" aria-label="Switch to dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/>
+          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/>
+          <line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/>
+          <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Introduction</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="variants.html">Variants &amp; Comparison</a></li>
+        <li><a href="media.html">Audio &amp; Video</a></li>
+        <li><a href="contact.html">Share Your View</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <article>
+        <h2>The Problem with Predicting Pixels</h2>
+        <p>The dominant approach to large-scale self-supervised learning today is generative: train a network to fill in missing pixels, missing words, missing patches. GPT predicts the next token; masked autoencoders reconstruct masked image patches. Yann LeCun, Meta&rsquo;s Chief AI Scientist and a Turing Award laureate, has argued for several years that this is the wrong objective for building machines that understand the world. The reason is simple: most of the bits in an image are unpredictable noise, and forcing a model to predict them wastes capacity on detail that does not matter.</p>
+
+        <p>His proposed alternative is the <strong>Joint Embedding Predictive Architecture</strong>, or <strong>JEPA</strong>. Instead of predicting the raw input, a JEPA predicts an <em>abstract representation</em> of the missing part &mdash; a vector that captures only what is structurally predictable, throwing away the unpredictable details. The architecture has been instantiated as <code>I-JEPA</code> for images (2023), <code>V-JEPA</code> for video (2024), and <code>V-JEPA&nbsp;2</code> as a world model for robotics (2024).</p>
+
+        <h3>Why This Topic</h3>
+        <p>I picked JEPA as my topic of academic interest because it sits exactly at the boundary between two questions I keep returning to: what does it mean for a machine to <em>understand</em> something, and how much of intelligence is just good prediction at the right level of abstraction? LeCun&rsquo;s position is unusual in the current landscape &mdash; he publicly disagrees with the &ldquo;scale autoregressive LLMs and we&rsquo;re done&rdquo; narrative, and JEPA is the technical embodiment of that disagreement.</p>
+
+        <section class="image-feature">
+          <svg class="intro-diagram" viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram contrasting pixel-space prediction with representation-space prediction">
+            <defs>
+              <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" class="arrow-head"/>
+              </marker>
+            </defs>
+            <text class="intro-title" x="240" y="20" text-anchor="middle">Where the prediction lives</text>
+            <g>
+              <rect class="intro-box" x="30" y="50" width="80" height="50" rx="6"/>
+              <text class="intro-text" x="70" y="80" text-anchor="middle">Input x</text>
+              <line class="intro-arrow" x1="115" y1="75" x2="170" y2="75" marker-end="url(#arrow1)"/>
+              <rect class="intro-box" x="170" y="50" width="100" height="50" rx="6"/>
+              <text class="intro-text" x="220" y="80" text-anchor="middle">Generative</text>
+              <line class="intro-arrow" x1="275" y1="75" x2="335" y2="75" marker-end="url(#arrow1)"/>
+              <rect x="335" y="50" width="115" height="50" rx="6" fill="#ffe2e0" stroke="#c0383a" stroke-width="2"/>
+              <text x="392" y="74" font-family="Helvetica Neue, Arial" font-size="12" fill="#882226" text-anchor="middle">predict pixels</text>
+              <text x="392" y="91" font-family="Helvetica Neue, Arial" font-size="11" fill="#882226" text-anchor="middle" font-style="italic">(wasteful)</text>
+            </g>
+            <g>
+              <rect class="intro-box" x="30" y="125" width="80" height="50" rx="6"/>
+              <text class="intro-text" x="70" y="155" text-anchor="middle">Input x</text>
+              <line class="intro-arrow" x1="115" y1="150" x2="170" y2="150" marker-end="url(#arrow1)"/>
+              <rect class="intro-box" x="170" y="125" width="100" height="50" rx="6"/>
+              <text class="intro-text" x="220" y="155" text-anchor="middle">JEPA</text>
+              <line class="intro-arrow" x1="275" y1="150" x2="335" y2="150" marker-end="url(#arrow1)"/>
+              <rect x="335" y="125" width="115" height="50" rx="6" fill="#dff5e3" stroke="#1f7a3f" stroke-width="2"/>
+              <text x="392" y="149" font-family="Helvetica Neue, Arial" font-size="12" fill="#0d5226" text-anchor="middle">predict reps</text>
+              <text x="392" y="166" font-family="Helvetica Neue, Arial" font-size="11" fill="#0d5226" text-anchor="middle" font-style="italic">(efficient)</text>
+            </g>
+          </svg>
+          <div class="caption">
+            <strong>Two places to predict</strong>
+            A generative model is trained to reconstruct the pixels of the missing region. A JEPA is trained to reconstruct the <em>encoded representation</em> of the missing region. The encoder is free to drop unpredictable noise, so capacity is spent only on the structure that actually transfers across examples.
+          </div>
+        </section>
+
+        <h3>Where to Read Next</h3>
+        <p>The <a href="architecture.html">Architecture</a> page walks through the four moving parts of a JEPA &mdash; you can click each one in the diagram to read what it does. The <a href="variants.html">Variants &amp; Comparison</a> page covers I-JEPA, V-JEPA, V-JEPA&nbsp;2, and includes a side-by-side switch you can use to flip between &ldquo;generative&rdquo; and &ldquo;JEPA&rdquo; framings of the same task.</p>
+      </article>
+
+      <aside>
+        <h3>Key Concepts</h3>
+        <ul>
+          <li><strong>JEPA</strong> &mdash; Joint Embedding Predictive Architecture</li>
+          <li><strong>Self-supervised</strong> &mdash; learns from raw data, no human labels</li>
+          <li><strong>Representation space</strong> &mdash; abstract vectors, not pixels</li>
+          <li><strong>World model</strong> &mdash; a system that can predict consequences of actions</li>
+        </ul>
+
+        <h3>About This Site</h3>
+        <p>This site is a study project for an <em>Introduction to Web Design</em> course. The topic &mdash; Yann LeCun&rsquo;s JEPA &mdash; is one I picked because it is one of the more interesting open arguments in modern AI research: whether a path to genuine machine understanding has to go through predicting representations rather than predicting tokens.</p>
+
+        <h3>Try the Theme Toggle</h3>
+        <p>The icon at the top right of every page switches between a light and a dark palette. Your choice is remembered between pages.</p>
+      </aside>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Yixia Yu &middot; <a href="../index.html">Back to Assignments</a></p>
+    </footer>
+  </body>
+</html>

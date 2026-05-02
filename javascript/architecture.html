@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture &mdash; JEPA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="js/color-mode.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="back-btn" href="../index.html">Back to Assignments</a>
+      <h1>JEPA</h1>
+      <p>Yann LeCun's Joint Embedding Predictive Architecture &mdash; a path to machines that understand the world</p>
+
+      <button class="color-mode-toggle" type="button" aria-label="Switch to dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/>
+          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/>
+          <line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/>
+          <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Introduction</a></li>
+        <li><a href="architecture.html" class="active">Architecture</a></li>
+        <li><a href="variants.html">Variants &amp; Comparison</a></li>
+        <li><a href="media.html">Audio &amp; Video</a></li>
+        <li><a href="contact.html">Share Your View</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <article>
+        <h2>The Four Moving Parts</h2>
+        <p>A JEPA looks more complicated than a standard autoencoder, but the building blocks are familiar. There is a <strong>context encoder</strong> that produces a representation of what is visible, a <strong>target encoder</strong> that produces a representation of what is hidden, a <strong>predictor</strong> that maps from one to the other in representation space, and an <strong>energy / loss</strong> term that pulls the prediction toward the truth. The diagram below is interactive &mdash; click any block to read what it does.</p>
+
+        <h3>Click the Diagram</h3>
+
+        <!-- Interactive architecture diagram. Each .jepa-part is a
+             clickable group. main.js wires them up to selectComponent
+             (click) and previewComponent (mouseenter). -->
+        <svg class="jepa-diagram" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive JEPA architecture diagram with clickable components">
+          <defs>
+            <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" style="fill: var(--diagram-stroke);"/>
+            </marker>
+          </defs>
+
+          <!-- Context input x -->
+          <g class="jepa-part" data-part="context" aria-label="Context input">
+            <rect x="20" y="55" width="80" height="50" rx="6"/>
+            <text x="60" y="86" text-anchor="middle">x  (context)</text>
+          </g>
+
+          <!-- Context encoder -->
+          <g class="jepa-part" data-part="context-encoder" aria-label="Context encoder">
+            <rect x="150" y="55" width="120" height="50" rx="6"/>
+            <text x="210" y="80" text-anchor="middle">Context Encoder</text>
+            <text x="210" y="96" text-anchor="middle" font-size="11" font-style="italic">f_θ</text>
+          </g>
+
+          <!-- Predictor -->
+          <g class="jepa-part" data-part="predictor" aria-label="Predictor">
+            <rect x="320" y="55" width="120" height="50" rx="6"/>
+            <text x="380" y="80" text-anchor="middle">Predictor</text>
+            <text x="380" y="96" text-anchor="middle" font-size="11" font-style="italic">g_φ(s_x, z)</text>
+          </g>
+
+          <!-- Target input y -->
+          <g class="jepa-part" data-part="target" aria-label="Target input">
+            <rect x="20" y="220" width="80" height="50" rx="6"/>
+            <text x="60" y="251" text-anchor="middle">y  (target)</text>
+          </g>
+
+          <!-- Target encoder -->
+          <g class="jepa-part" data-part="target-encoder" aria-label="Target encoder">
+            <rect x="150" y="220" width="120" height="50" rx="6"/>
+            <text x="210" y="245" text-anchor="middle">Target Encoder</text>
+            <text x="210" y="261" text-anchor="middle" font-size="11" font-style="italic">f_ξ  (EMA)</text>
+          </g>
+
+          <!-- Energy / Loss -->
+          <g class="jepa-part" data-part="energy" aria-label="Energy / Loss">
+            <circle cx="540" cy="160" r="42"/>
+            <text x="540" y="158" text-anchor="middle">Energy</text>
+            <text x="540" y="174" text-anchor="middle" font-size="11" font-style="italic">D(ŝ_y, s_y)</text>
+          </g>
+
+          <!-- Wires -->
+          <line class="diagram-arrow" x1="100" y1="80" x2="148" y2="80"/>
+          <line class="diagram-arrow" x1="270" y1="80" x2="318" y2="80"/>
+          <text class="diagram-label" x="289" y="72" text-anchor="middle">s_x</text>
+
+          <line class="diagram-arrow" x1="100" y1="245" x2="148" y2="245"/>
+          <line class="diagram-arrow" x1="270" y1="245" x2="498" y2="180"/>
+          <text class="diagram-label" x="380" y="240">s_y</text>
+
+          <line class="diagram-arrow" x1="440" y1="80" x2="498" y2="140"/>
+          <text class="diagram-label" x="465" y="105">ŝ_y</text>
+
+          <!-- Latent z fed into the predictor -->
+          <line class="diagram-arrow" x1="380" y1="20" x2="380" y2="53"/>
+          <text class="diagram-label" x="380" y="15" text-anchor="middle">latent z</text>
+
+          <!-- Stop-gradient annotation on target encoder -->
+          <text class="diagram-label" x="210" y="295" text-anchor="middle">no gradient (stop-grad)</text>
+        </svg>
+        <p class="diagram-hint">Tip: each block is keyboard-focusable too &mdash; press Tab, then Enter or Space.</p>
+
+        <!-- The description panel rewritten by main.js on every click. -->
+        <div id="diagram-info" class="diagram-panel" aria-live="polite">
+          <h4>Loading…</h4>
+        </div>
+
+        <h3>What Makes JEPA Non-Trivial</h3>
+        <p>The architecture has a well-known failure mode: <em>representation collapse</em>. If the encoder is allowed to map every input to the same constant vector, the predictor can match the target trivially &mdash; perfect loss, useless features. JEPA prevents this with two design choices working together:</p>
+        <ol style="padding-left: 22px; margin-bottom: 14px; color: var(--text-muted);">
+          <li><strong>Asymmetry between encoders.</strong> The target encoder is an exponential-moving-average copy of the context encoder, with no gradient flowing back through it. The student has to chase a slowly-moving teacher rather than negotiate a degenerate fixed point.</li>
+          <li><strong>Block-level masking.</strong> I-JEPA samples large rectangular target blocks rather than tiny patches. Predicting a large block forces the encoder to capture object-level structure; if it collapsed, even the simplest block would be unpredictable.</li>
+        </ol>
+        <p>These two ingredients are also what differentiate JEPA from contrastive methods like SimCLR or MoCo, which prevent collapse by hard-negative sampling. JEPA does not need negatives at all.</p>
+      </article>
+
+      <aside>
+        <h3>Notation</h3>
+        <ul>
+          <li><strong>x</strong> &mdash; context input (visible part)</li>
+          <li><strong>y</strong> &mdash; target input (hidden part)</li>
+          <li><strong>s_x</strong> &mdash; context representation</li>
+          <li><strong>s_y</strong> &mdash; target representation</li>
+          <li><strong>ŝ_y</strong> &mdash; predicted target representation</li>
+          <li><strong>z</strong> &mdash; latent that conditions the predictor</li>
+          <li><strong>EMA</strong> &mdash; exponential moving average</li>
+        </ul>
+
+        <h3>Why an EMA Teacher</h3>
+        <p>Stopping the gradient and using an EMA copy for the target encoder is a trick borrowed from BYOL. It produces stable targets that drift slowly enough for the student to chase, but not so slowly that learning stalls. The EMA momentum is a small but consequential hyperparameter.</p>
+
+        <h3>How Interactivity Works</h3>
+        <p>The diagram on the left is wired up by <code>js/main.js</code>. Two DOM queries (<code>querySelectorAll('.jepa-part')</code> and <code>getElementById('diagram-info')</code>) are used; clicking a part both rewrites the description text (a content change) and toggles a CSS class that restyles the SVG (a CSS-property change).</p>
+      </aside>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Yixia Yu &middot; <a href="../index.html">Back to Assignments</a></p>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
