@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yixia Yu - Photography</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 650px;
+            border: 2px solid #ccc;
+            margin: 16px 0;
+        }
+
+        /* ---- Popup ---- */
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+        .leaflet-popup-content {
+            margin: 12px 14px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+        .loc-popup { width: 340px; }
+        .loc-popup h3 {
+            margin: 0 0 2px 0;
+            font-size: 17px;
+            color: #222;
+        }
+        .loc-popup .visit-date {
+            color: #888;
+            font-size: 13px;
+            margin: 0 0 10px 0;
+        }
+        .loc-popup .description {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.5;
+            margin: 0 0 10px 0;
+        }
+
+        .gallery {
+            display: flex;
+            overflow-x: auto;
+            gap: 14px;
+            padding: 4px 0 8px 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: #bbb transparent;
+        }
+        .gallery::-webkit-scrollbar { height: 6px; }
+        .gallery::-webkit-scrollbar-thumb { background: #bbb; border-radius: 3px; }
+
+        .photo-card {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            text-align: center;
+        }
+        .photo-card img {
+            display: block;
+            border: 4px solid #f5f5f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            background: #eee;
+        }
+        .photo-card .caption {
+            font-size: 11px;
+            color: #666;
+            max-width: 220px;
+            margin: 5px auto 0;
+            line-height: 1.3;
+        }
+
+        .photo-card img { cursor: pointer; }
+
+        /* Red dot pulse animation */
+        @keyframes pulse {
+            0%   { r: 14; opacity: 0.5; }
+            100% { r: 22; opacity: 0; }
+        }
+
+        /* ---- Lightbox ---- */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.93);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #lightbox.open { display: flex; }
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 78vh;
+            object-fit: contain;
+            border: 4px solid #fff;
+            box-shadow: 0 0 60px rgba(0,0,0,0.5);
+        }
+        .lb-caption {
+            color: #ddd;
+            font-size: 15px;
+            margin-top: 14px;
+            text-align: center;
+            max-width: 80vw;
+        }
+        .lb-counter {
+            color: #888;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        .lb-close {
+            position: absolute;
+            top: 18px; right: 28px;
+            color: #fff;
+            font-size: 40px;
+            cursor: pointer;
+            line-height: 1;
+            user-select: none;
+        }
+        .lb-close:hover { color: #e74c3c; }
+        .lb-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.8);
+            font-size: 52px;
+            cursor: pointer;
+            user-select: none;
+            padding: 12px;
+            transition: color 0.15s;
+        }
+        .lb-arrow:hover { color: #fff; }
+        .lb-prev { left: 20px; }
+        .lb-next { right: 20px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Photography</h1>
+    <nav>
+        <a href="../index.html">Home</a> |
+        <a href="portfolio.html">Portfolio &amp; Academics</a> |
+        <a href="hobbies.html">Hobbies</a> |
+        <a href="photography.html">Photography</a> 
+    </nav>
+</header>
+
+<main>
+    <h2>My Travels Around the World Since 2023</h2>
+
+    <p>Hover over a red pin to preview, click to pin the popup open. Scroll inside the popup to browse photos. Use the zoom controls or scroll wheel to explore the map in detail.</p>
+    <p>Only New York, Niagara Falls and Atlanta are currently displayed.(by 2026/2/10)</p>
+    <div id="map"></div>
+
+    <p>Want to see more? Follow my photography on <a href="https://www.instagram.com/tralalelojk">Instagram</a>.</p>
+</main>
+
+<footer>
+    <p>Yixia Yu | 2026</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+
+var locations = [
+    /* ---------- USA ---------- */
+    {
+        name: "New York City",
+        coords: [40.7128, -74.0060],
+        date: "Sep 2025",
+        description: "The city that never sleeps. Walking across the Brooklyn Bridge at golden hour and exploring the NYU neighborhood in Manhattan were unforgettable experiences.",
+        photos: [
+            { src: "../images/nyfd.jpg", alt: "Rebirth", caption: "Rebirth" },
+            { src: "../images/nyts.jpg", alt: "time square", caption: "time square" },
+            { src: "../images/nyu.jpg", alt: "NYU campus", caption: "NYU campus" }
+        ]
+    },
+    {
+        name: "Niagara Falls",
+        coords: [43.0962, -79.0377],
+        date: "Nov 2025",
+        description: "The raw power of water thundering over the falls is something no photograph can fully capture, but I tried my best.",
+        photos: [
+            { src: "../images/ng1.jpg", alt: "Niagara Falls viewed from the Canadian side with mist rising", caption: "Niagara Falls" },
+            { src: "../images/ng2.jpg", alt: "Rainbow forming in the mist of Niagara Falls", caption: "Niagara Falls" },
+            { src: "../images/ng3.jpg", alt: "Niagara Falls at night with colorful illumination", caption: "Niagara Falls" }
+        ]
+    },
+    {
+        name: "Atlanta (Georgia Tech)",
+        coords: [33.7756, -84.3963],
+        date: "Feb 2026",
+        description: "Visiting Georgia Tech's campus gave me a glimpse into one of the top engineering schools in the US. The Tech Tower is iconic.",
+        photos: [
+            { src: "../images/gt.jpg", alt: "Georgia Tech campus with the Tech Tower in the background", caption: "Georgia Tech campus" },
+            { src: "../images/gt1.jpg", alt: "Downtown Atlanta skyline from Piedmont Park", caption: "bridge tournament in Georgia Tech" }
+        ]
+    },
+    {
+        name: "Lake Tahoe, California",
+        coords: [39.0968, -120.0324],
+        date: "Jan 2024",
+        description: "Crystal-clear alpine water surrounded by snow-capped peaks. Lake Tahoe in winter is a paradise for photography and skiing alike.",
+        photos: [
+            { src: "../images/tahoe-1.jpg", alt: "Lake Tahoe with clear blue water and snow-covered mountains", caption: "Lake Tahoe in winter" },
+            { src: "../images/tahoe-2.jpg", alt: "Sunset over Lake Tahoe with orange and purple skies", caption: "Tahoe sunset" }
+        ]
+    },
+    {
+        name: "Los Angeles, California",
+        coords: [34.0522, -118.2437],
+        date: "Jan 2024",
+        description: "Sunshine, palm trees, and the endless Pacific coastline. LA's energy is completely different from the East Coast.",
+        photos: [
+            { src: "../images/la-1.jpg", alt: "Santa Monica Pier at sunset with the Ferris wheel lit up", caption: "Santa Monica Pier" },
+            { src: "../images/la-2.jpg", alt: "Hollywood sign viewed from Griffith Observatory", caption: "Hollywood sign from Griffith Observatory" }
+        ]
+    },
+
+    /* ---------- Latin America ---------- */
+    {
+        name: "Mexico City, Mexico",
+        coords: [19.4326, -99.1332],
+        date: "Dec 2024",
+        description: "A sprawling metropolis rich in history. The Zocalo, Frida Kahlo's house, and the incredible street food left a lasting impression.",
+        photos: [
+            { src: "../images/mexicocity-1.jpg", alt: "Palacio de Bellas Artes in Mexico City at dusk", caption: "Palacio de Bellas Artes" },
+            { src: "../images/mexicocity-2.jpg", alt: "Colorful street in Coyoacan neighborhood", caption: "Coyoacan neighborhood" }
+        ]
+    },
+    {
+        name: "Guanajuato, Mexico",
+        coords: [21.0190, -101.2574],
+        date: "Dec 2024",
+        description: "A colorful colonial city built into the hillside. Every alley reveals a new palette of colors and every plaza has live music.",
+        photos: [
+            { src: "../images/guanajuato-1.jpg", alt: "Colorful hillside houses in Guanajuato viewed from a mirador", caption: "Guanajuato hillside panorama" },
+            { src: "../images/guanajuato-2.jpg", alt: "Jardin de la Union plaza at night with lights and trees", caption: "Jardin de la Union at night" }
+        ]
+    },
+    {
+        name: "Costa Rica",
+        coords: [9.9281, -84.0907],
+        date: "Jan 2025",
+        description: "Pura vida! Lush rainforests, volcanic landscapes, and incredible biodiversity. Costa Rica is a nature photographer's dream.",
+        photos: [
+            { src: "../images/costarica-1.jpg", alt: "Arenal Volcano with green jungle in the foreground", caption: "Arenal Volcano" },
+            { src: "../images/costarica-2.jpg", alt: "Red-eyed tree frog on a leaf in the rainforest", caption: "Rainforest wildlife" }
+        ]
+    },
+
+    /* ---------- Japan ---------- */
+    {
+        name: "Tokyo, Japan",
+        coords: [35.6762, 139.6503],
+        date: "Aug 2024",
+        description: "Neon-lit streets, serene temples, and the most organized chaos I have ever experienced. Tokyo is endlessly photogenic.",
+        photos: [
+            { src: "../images/tokyo-1.jpg", alt: "Shibuya crossing at night with neon lights and crowds", caption: "Shibuya Crossing at night" },
+            { src: "../images/tokyo-2.jpg", alt: "Senso-ji temple in Asakusa with the red lantern", caption: "Senso-ji Temple, Asakusa" }
+        ]
+    },
+    {
+        name: "Kyoto, Japan",
+        coords: [35.0116, 135.7681],
+        date: "Aug 2024",
+        description: "Ancient capital of Japan. The bamboo groves, golden pavilions, and thousands of torii gates transport you to another era.",
+        photos: [
+            { src: "../images/kyoto-1.jpg", alt: "Fushimi Inari shrine with thousands of orange torii gates", caption: "Fushimi Inari Taisha" },
+            { src: "../images/kyoto-2.jpg", alt: "Arashiyama bamboo grove with sunlight filtering through", caption: "Arashiyama Bamboo Grove" }
+        ]
+    },
+
+    /* ---------- China ---------- */
+    {
+        name: "Shanghai",
+        coords: [31.2304, 121.4737],
+        date: "Home",
+        description: "My home city — a vibrant metropolis where tradition meets modernity. The Bund, the French Concession, and Pudong's skyline never get old.",
+        photos: [
+            { src: "../images/shanghai-1.jpg", alt: "The Bund waterfront at dusk with Pudong skyline glowing", caption: "The Bund at dusk" },
+            { src: "../images/shanghai-2.jpg", alt: "Quiet tree-lined alley in the French Concession", caption: "French Concession alley" }
+        ]
+    },
+    {
+        name: "Inner Mongolia",
+        coords: [43.6500, 115.0500],
+        date: "Jul 2023",
+        description: "Endless grasslands stretching to the horizon under a vast sky. Horseback riding at sunrise across the steppe was surreal.",
+        photos: [
+            { src: "../images/innermongolia-1.jpg", alt: "Vast green grassland under blue sky in Inner Mongolia", caption: "Hulunbuir Grassland" },
+            { src: "../images/innermongolia-2.jpg", alt: "Mongolian yurt at sunset on the steppe", caption: "Sunset on the steppe" }
+        ]
+    },
+    {
+        name: "Hangzhou",
+        coords: [30.2741, 120.1551],
+        date: "Apr 2024",
+        description: "West Lake's misty mornings and Longjing tea plantations make Hangzhou one of the most poetic cities in China.",
+        photos: [
+            { src: "../images/hangzhou-1.jpg", alt: "West Lake with the Broken Bridge in morning mist", caption: "West Lake morning mist" },
+            { src: "../images/hangzhou-2.jpg", alt: "Longjing tea terraces on green hillside", caption: "Longjing tea terraces" }
+        ]
+    },
+    {
+        name: "Suzhou",
+        coords: [31.2990, 120.5853],
+        date: "Apr 2024",
+        description: "Known as the Venice of the East, Suzhou's classical gardens and winding canals are a masterpiece of landscape design.",
+        photos: [
+            { src: "../images/suzhou-1.jpg", alt: "Humble Administrator's Garden with pond and pavilion", caption: "Humble Administrator's Garden" },
+            { src: "../images/suzhou-2.jpg", alt: "Pingjiang Road canal with traditional white-walled houses", caption: "Pingjiang Road canal" }
+        ]
+    },
+    {
+        name: "Hong Kong",
+        coords: [22.3193, 114.1694],
+        date: "Feb 2024",
+        description: "A city of contrasts — towering skyscrapers, bustling street markets, and lush hiking trails all packed into a compact island.",
+        photos: [
+            { src: "../images/hongkong-1.jpg", alt: "Victoria Harbour at night with city lights reflecting on water", caption: "Victoria Harbour at night" },
+            { src: "../images/hongkong-2.jpg", alt: "Temple Street night market with neon signs", caption: "Temple Street night market" }
+        ]
+    },
+    {
+        name: "Huangshan",
+        coords: [30.1313, 118.1626],
+        date: "Oct 2023",
+        description: "The Yellow Mountains live up to every Chinese landscape painting. Sea of clouds, twisted pines, and granite peaks disappearing into mist.",
+        photos: [
+            { src: "../images/huangshan-1.jpg", alt: "Sea of clouds below granite peaks at Huangshan", caption: "Sea of clouds at sunrise" },
+            { src: "../images/huangshan-2.jpg", alt: "Twisted pine tree on cliff edge at Huangshan", caption: "Guest-Greeting Pine" }
+        ]
+    },
+    {
+        name: "Chengdu",
+        coords: [30.5728, 104.0668],
+        date: "Jul 2024",
+        description: "Home of giant pandas, fiery hotpot, and a laid-back lifestyle. Chengdu moves at its own relaxed pace.",
+        photos: [
+            { src: "../images/chengdu-1.jpg", alt: "Giant panda eating bamboo at Chengdu Research Base", caption: "Giant panda at the Research Base" },
+            { src: "../images/chengdu-2.jpg", alt: "Jinli Ancient Street lit up at night", caption: "Jinli Ancient Street" }
+        ]
+    },
+    {
+        name: "Anji",
+        coords: [30.6313, 119.6803],
+        date: "May 2024",
+        description: "Rolling bamboo seas and crystal-clear streams. Anji is where Crouching Tiger, Hidden Dragon was filmed, and it looks exactly as magical in person.",
+        photos: [
+            { src: "../images/anji-1.jpg", alt: "Vast bamboo forest in Anji with sunlight filtering through", caption: "Bamboo Sea" },
+            { src: "../images/anji-2.jpg", alt: "Clear stream flowing through green valley in Anji", caption: "Mountain stream in Anji" }
+        ]
+    },
+    {
+        name: "Jilin",
+        coords: [43.8380, 126.5495],
+        date: "Jan 2024",
+        description: "Winter wonderland in northeast China. The rime ice along the Songhua River transforms trees into frozen sculptures.",
+        photos: [
+            { src: "../images/jilin-1.jpg", alt: "Rime-covered trees along the Songhua River in winter", caption: "Rime ice on Songhua River" },
+            { src: "../images/jilin-2.jpg", alt: "Snow-covered landscape at Wusong Island", caption: "Wusong Island in winter" }
+        ]
+    },
+    {
+        name: "Changsha",
+        coords: [28.2282, 112.9388],
+        date: "Jun 2024",
+        description: "A city of fiery cuisine and youthful energy. Orange Island and the Young Mao statue are iconic landmarks.",
+        photos: [
+            { src: "../images/changsha-1.jpg", alt: "Young Mao Zedong statue on Orange Island in Changsha", caption: "Orange Island head sculpture" },
+            { src: "../images/changsha-2.jpg", alt: "Changsha city skyline along the Xiang River at night", caption: "Xiang River night view" }
+        ]
+    },
+    {
+        name: "Quanzhou",
+        coords: [24.8741, 118.6757],
+        date: "Feb 2025",
+        description: "A UNESCO World Heritage city and the starting point of the Maritime Silk Road. Ancient temples of many religions coexist on the same street.",
+        photos: [
+            { src: "../images/quanzhou-1.jpg", alt: "Kaiyuan Temple twin pagodas in Quanzhou", caption: "Kaiyuan Temple twin pagodas" },
+            { src: "../images/quanzhou-2.jpg", alt: "Old town street in Quanzhou with traditional architecture", caption: "West Street old town" }
+        ]
+    },
+    {
+        name: "Qingdao",
+        coords: [36.0671, 120.3826],
+        date: "Aug 2023",
+        description: "A coastal gem with European-style architecture, golden beaches, and world-famous Tsingtao beer. The sea breeze is always refreshing.",
+        photos: [
+            { src: "../images/qingdao-1.jpg", alt: "Zhanqiao Pier stretching into the sea in Qingdao", caption: "Zhanqiao Pier" },
+            { src: "../images/qingdao-2.jpg", alt: "Red-roofed European buildings in Badaguan scenic area", caption: "Badaguan scenic area" }
+        ]
+    }
+];
+
+function createPopupContent(loc, locIndex) {
+    var photosHtml = "";
+    for (var i = 0; i < loc.photos.length; i++) {
+        var p = loc.photos[i];
+        var w = p.w || 220;
+        var h = p.h || 155;
+        photosHtml +=
+            '<div class="photo-card">' +
+                '<img src="' + p.src + '" width="' + w + '" height="' + h + '" alt="' + p.alt + '" onclick="openLightbox(' + locIndex + ',' + i + ')">' +
+                '<div class="caption">' + p.caption + '</div>' +
+            '</div>';
+    }
+    return (
+        '<div class="loc-popup">' +
+            '<h3>' + loc.name + '</h3>' +
+            '<p class="visit-date">' + loc.date + '</p>' +
+            '<div class="gallery">' + photosHtml + '</div>' +
+            '<p class="description">' + loc.description + '</p>' +
+        '</div>'
+    );
+}
+
+var map = L.map("map", {
+    center: [30, 50],
+    zoom: 3,
+    minZoom: 2,
+    maxZoom: 18,
+    zoomControl: true,
+    scrollWheelZoom: true
+});
+
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: "abcd",
+    maxZoom: 19
+}).addTo(map);
+
+var pinStyle = {
+    radius: 7,
+    fillColor: "#e74c3c",
+    color: "#c0392b",
+    weight: 2,
+    opacity: 1,
+    fillOpacity: 0.85
+};
+
+var allMarkers = [];
+var pinnedMarker = null;
+var HOVER_DELAY = 300;
+
+for (var i = 0; i < locations.length; i++) {
+    (function(loc, locIndex) {
+        var marker = L.circleMarker(loc.coords, pinStyle).addTo(map);
+        var hoverTimer = null;
+
+        marker.bindPopup(createPopupContent(loc, locIndex), {
+            maxWidth: 380,
+            minWidth: 340,
+            autoClose: false,
+            closeOnClick: false
+        });
+
+        marker.on("mouseover", function() {
+            clearTimeout(hoverTimer);
+            if (pinnedMarker && pinnedMarker !== this) return;
+            if (!this.isPopupOpen()) this.openPopup();
+        });
+
+        marker.on("mouseout", function() {
+            var self = this;
+            if (pinnedMarker === self) return;
+            hoverTimer = setTimeout(function() {
+                if (pinnedMarker !== self) self.closePopup();
+            }, HOVER_DELAY);
+        });
+
+        marker.on("click", function(e) {
+            L.DomEvent.stopPropagation(e);
+            if (pinnedMarker && pinnedMarker !== this) {
+                pinnedMarker.closePopup();
+            }
+            pinnedMarker = this;
+            this.openPopup();
+        });
+
+        marker.on("popupopen", function() {
+            var el = this.getPopup().getElement();
+            if (!el) return;
+            var self = this;
+            el.addEventListener("mouseenter", function() {
+                clearTimeout(hoverTimer);
+            });
+            el.addEventListener("mouseleave", function() {
+                if (pinnedMarker === self) return;
+                hoverTimer = setTimeout(function() {
+                    if (pinnedMarker !== self) self.closePopup();
+                }, HOVER_DELAY);
+            });
+        });
+
+        marker.on("popupclose", function() {
+            if (pinnedMarker === this) pinnedMarker = null;
+        });
+
+        allMarkers.push(marker);
+    })(locations[i], i);
+}
+
+map.on("click", function() {
+    if (pinnedMarker) {
+        pinnedMarker.closePopup();
+        pinnedMarker = null;
+    }
+});
+
+var group = L.featureGroup(allMarkers);
+map.fitBounds(group.getBounds().pad(0.15));
+
+var lbLocIndex = 0;
+var lbPhotoIndex = 0;
+
+function openLightbox(locIdx, photoIdx) {
+    lbLocIndex = locIdx;
+    lbPhotoIndex = photoIdx;
+    renderLightbox();
+    document.getElementById("lightbox").classList.add("open");
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").classList.remove("open");
+}
+
+function lbPrev() {
+    var photos = locations[lbLocIndex].photos;
+    lbPhotoIndex = (lbPhotoIndex - 1 + photos.length) % photos.length;
+    renderLightbox();
+}
+
+function lbNext() {
+    var photos = locations[lbLocIndex].photos;
+    lbPhotoIndex = (lbPhotoIndex + 1) % photos.length;
+    renderLightbox();
+}
+
+function renderLightbox() {
+    var loc = locations[lbLocIndex];
+    var photo = loc.photos[lbPhotoIndex];
+    document.getElementById("lb-img").src = photo.src;
+    document.getElementById("lb-img").alt = photo.alt;
+    document.getElementById("lb-cap").textContent = loc.name + " — " + photo.caption;
+    document.getElementById("lb-cnt").textContent = (lbPhotoIndex + 1) + " / " + loc.photos.length;
+}
+
+document.addEventListener("keydown", function(e) {
+    var lb = document.getElementById("lightbox");
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") lbPrev();
+    if (e.key === "ArrowRight") lbNext();
+});
+</script>
+
+<div id="lightbox" onclick="closeLightbox()">
+    <span class="lb-close" onclick="closeLightbox()">&times;</span>
+    <span class="lb-arrow lb-prev" onclick="event.stopPropagation(); lbPrev()">&#8249;</span>
+    <img id="lb-img" src="" alt="" onclick="event.stopPropagation()">
+    <div class="lb-caption" id="lb-cap" onclick="event.stopPropagation()"></div>
+    <div class="lb-counter" id="lb-cnt" onclick="event.stopPropagation()"></div>
+    <span class="lb-arrow lb-next" onclick="event.stopPropagation(); lbNext()">&#8250;</span>
+</div>
+
+</body>
+</html>

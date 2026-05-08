@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Raster Graphics - Yixia Yu</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <a class="back-btn" href="../index.html">Back to Assignments</a>
+
+    <h1>Wandering Through the Colorful Streets in Guanajuato</h1>
+
+    <img
+      srcset="
+        foreground-1440.png 3x,
+        foreground-960.png 2x,
+        foreground-480.png 1x
+      "
+      src="foreground-480.png"
+      width="480"
+      height="640"
+      alt="A decontextualized photo of me placed in Guanajuato"
+    >
+
+    <p id="position-label"></p>
+
+    <script src="../js/random-position.js"></script>
+  </body>
+</html>

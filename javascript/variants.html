@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variants &amp; Comparison &mdash; JEPA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="js/color-mode.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="back-btn" href="../index.html">Back to Assignments</a>
+      <h1>JEPA</h1>
+      <p>Yann LeCun's Joint Embedding Predictive Architecture &mdash; a path to machines that understand the world</p>
+
+      <button class="color-mode-toggle" type="button" aria-label="Switch to dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/>
+          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/>
+          <line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/>
+          <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Introduction</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="variants.html" class="active">Variants &amp; Comparison</a></li>
+        <li><a href="media.html">Audio &amp; Video</a></li>
+        <li><a href="contact.html">Share Your View</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <article>
+        <h2>Three Generations: I-JEPA, V-JEPA, V-JEPA&nbsp;2</h2>
+        <p>The same architectural recipe has been instantiated in three increasingly ambitious settings. Each one applies the &ldquo;predict in representation space&rdquo; idea to a richer kind of input, and each one forces a slightly different design choice for what counts as <em>context</em> and <em>target</em>.</p>
+
+        <h3>I-JEPA &mdash; Images (2023)</h3>
+        <p>The first instantiation, published as &ldquo;Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture&rdquo; (CVPR 2023). I-JEPA samples a single large context block of an image and several large target blocks; the predictor is conditioned on a positional latent <code>z</code> that says where the target sits relative to the context. On standard image-classification benchmarks, I-JEPA beats pixel-reconstruction methods like MAE while training an order of magnitude faster.</p>
+
+        <h3>V-JEPA &mdash; Video (2024)</h3>
+        <p>V-JEPA extends the recipe to video, predicting representations of held-out spatio-temporal regions. Because video adds the time axis, the model implicitly learns about motion, object permanence, and short-horizon physics. Importantly, V-JEPA features transfer to action-recognition tasks without ever being trained on labels for actions.</p>
+
+        <h3>V-JEPA&nbsp;2 &mdash; A World Model for Robotics (2024)</h3>
+        <p>V-JEPA&nbsp;2 is the most ambitious step: a scaled-up V-JEPA used as a <em>world model</em> for an embodied agent. The model is fine-tuned with a small amount of robot-interaction data so that the predictor becomes <em>action-conditioned</em>, taking both the current representation and a candidate action and predicting the next representation. A planner then searches over actions to reach a goal. This is the JEPA recipe doing exactly what LeCun has been arguing for: predicting the future of the world in abstract form, then planning by simulating in latent space.</p>
+
+        <h2>Generative vs. JEPA &mdash; Try the Switch</h2>
+        <p>Most practitioners are introduced to self-supervised learning through generative methods (GPT, MAE, diffusion). JEPA is the same task framed differently. Click between the two buttons below to compare how each approach handles the same fill-in-the-blank problem on a video clip.</p>
+
+        <div class="compare-toggle">
+          <button type="button" class="is-active" data-target="panel-generative">Generative framing</button>
+          <button type="button" data-target="panel-jepa">JEPA framing</button>
+        </div>
+
+        <section id="panel-generative" class="compare-panel is-shown">
+          <h4>Generative: predict the missing pixels</h4>
+          <p>The model receives the visible frames of the clip and is asked to <em>render</em> the missing future frames pixel-by-pixel. Loss is measured in pixel space &mdash; typically L2 or a reconstruction loss combined with a perceptual or adversarial term. Because so many futures are plausible (the leaves can sway any number of ways, the camera might pan slightly), the model is rewarded for hedging: the predicted frames look blurry or averaged, and a large fraction of the model&rsquo;s capacity is consumed by texture and lighting that has nothing to do with what the clip is <em>about</em>.</p>
+        </section>
+
+        <section id="panel-jepa" class="compare-panel">
+          <h4>JEPA: predict the missing representation</h4>
+          <p>The same clip is fed in. The visible frames go through a context encoder; the missing frames go through an EMA target encoder. The predictor outputs a vector <code>ŝ_y</code> &mdash; its guess at the target encoder&rsquo;s output &mdash; and the loss is just the L2 distance between <code>ŝ_y</code> and the actual <code>s_y</code>. Crucially, the encoder is free to throw away unpredictable noise during training, because there is no longer any pressure to reconstruct it. The features that survive are the ones that are <em>consistently predictable across examples</em> &mdash; exactly the structure you want a world model to capture.</p>
+        </section>
+
+        <h3>How This Connects to LeCun&rsquo;s Bigger Picture</h3>
+        <p>JEPA is one piece of LeCun&rsquo;s broader proposal for &ldquo;Autonomous Machine Intelligence,&rdquo; an architecture that includes a world model (the JEPA part), a configurator that sets goals, a short-term memory, and a planner that runs gradient-based search through the world model. In that picture, the JEPA is the perceptual and predictive backbone, and a hierarchical extension &mdash; <strong>H-JEPA</strong> &mdash; predicts at multiple time scales so the planner can reason over long horizons without exploding compute.</p>
+      </article>
+
+      <aside>
+        <h3>Variant Quick Reference</h3>
+        <ul>
+          <li><strong>I-JEPA</strong> &mdash; images, large block targets, 2023</li>
+          <li><strong>V-JEPA</strong> &mdash; video, spatio-temporal targets, 2024</li>
+          <li><strong>V-JEPA&nbsp;2</strong> &mdash; world model for robotics, action-conditioned predictor, 2024</li>
+          <li><strong>H-JEPA</strong> &mdash; hierarchical, multi-scale prediction (proposed)</li>
+        </ul>
+
+        <h3>Where JEPA Is Not (Yet) Ahead</h3>
+        <p>Generative models are still better when the task is literal: image generation, text generation, anything where the user wants an actual artifact rather than a useful internal representation. JEPA is a representation-learning method first; the instantiations that look most exciting (V-JEPA&nbsp;2) appear when those representations are wired into a planner.</p>
+
+        <h3>Sources</h3>
+        <ul>
+          <li>Assran et&nbsp;al., &ldquo;Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture,&rdquo; CVPR 2023.</li>
+          <li>Bardes et&nbsp;al., &ldquo;V-JEPA: Latent Video Prediction for Visual Representation Learning,&rdquo; 2024.</li>
+          <li>LeCun, &ldquo;A Path Towards Autonomous Machine Intelligence,&rdquo; OpenReview 2022.</li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Yixia Yu &middot; <a href="../index.html">Back to Assignments</a></p>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

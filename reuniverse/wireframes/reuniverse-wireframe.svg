@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Reuniverse three page wireframe</title>
+  <desc id="desc">A digital wireframe showing the home, concept, and demo page layouts for the Reuniverse final project.</desc>
+  <rect width="1400" height="900" fill="#f4f0e8"/>
+  <style>
+    .label { font: 700 22px Arial, sans-serif; fill: #171a1f; }
+    .small { font: 14px Arial, sans-serif; fill: #45403a; }
+    .micro { font: 11px Arial, sans-serif; fill: #665f54; text-transform: uppercase; }
+    .panel { fill: #fffdf8; stroke: #171a1f; stroke-width: 2; }
+    .soft { fill: #ebe3d6; stroke: #665f54; stroke-width: 1.4; }
+    .image { fill: #101727; stroke: #0b3d91; stroke-width: 2; }
+    .accent { fill: #c62d1f; }
+    .line { stroke: #665f54; stroke-width: 2; fill: none; }
+  </style>
+
+  <text x="50" y="55" class="label">Reuniverse wireframes</text>
+  <text x="50" y="82" class="small">Three page website: home, concept, browser demo</text>
+
+  <g transform="translate(50 125)">
+    <text x="0" y="-25" class="label">Home</text>
+    <rect class="panel" width="390" height="660" rx="8"/>
+    <rect class="soft" x="18" y="18" width="354" height="42" rx="4"/>
+    <text x="34" y="44" class="micro">brand + relative nav</text>
+    <rect class="image" x="18" y="82" width="354" height="230" rx="4"/>
+    <circle cx="318" cy="124" r="24" class="accent"/>
+    <line x1="42" y1="132" x2="235" y2="132" class="line"/>
+    <line x1="42" y1="166" x2="280" y2="166" class="line"/>
+    <line x1="42" y1="205" x2="180" y2="205" class="line"/>
+    <rect class="soft" x="42" y="235" width="120" height="34" rx="4"/>
+    <rect class="soft" x="172" y="235" width="120" height="34" rx="4"/>
+    <rect class="soft" x="18" y="336" width="108" height="120" rx="4"/>
+    <rect class="soft" x="141" y="336" width="108" height="120" rx="4"/>
+    <rect class="soft" x="264" y="336" width="108" height="120" rx="4"/>
+    <text x="30" y="480" class="micro">three mechanisms</text>
+    <rect class="soft" x="18" y="505" width="170" height="110" rx="4"/>
+    <rect class="image" x="205" y="505" width="167" height="110" rx="4"/>
+    <rect class="soft" x="18" y="630" width="354" height="18" rx="4"/>
+  </g>
+
+  <g transform="translate(505 125)">
+    <text x="0" y="-25" class="label">Concept</text>
+    <rect class="panel" width="390" height="660" rx="8"/>
+    <rect class="soft" x="18" y="18" width="354" height="42" rx="4"/>
+    <rect class="image" x="18" y="72" width="354" height="44" rx="4"/>
+    <text x="34" y="100" class="micro">sticky anchor navigation</text>
+    <line x1="30" y1="155" x2="248" y2="155" class="line"/>
+    <line x1="30" y1="190" x2="350" y2="190" class="line"/>
+    <rect class="soft" x="30" y="225" width="185" height="120" rx="4"/>
+    <rect class="image" x="235" y="225" width="115" height="120" rx="4"/>
+    <text x="30" y="390" class="micro">body assignment text + list</text>
+    <rect class="soft" x="30" y="415" width="330" height="70" rx="4"/>
+    <text x="30" y="525" class="micro">civilization stage grid</text>
+    <rect class="soft" x="30" y="548" width="100" height="58" rx="4"/>
+    <rect class="soft" x="145" y="548" width="100" height="58" rx="4"/>
+    <rect class="soft" x="260" y="548" width="100" height="58" rx="4"/>
+    <rect class="soft" x="30" y="630" width="330" height="18" rx="4"/>
+  </g>
+
+  <g transform="translate(960 125)">
+    <text x="0" y="-25" class="label">Try It</text>
+    <rect class="panel" width="390" height="660" rx="8"/>
+    <rect class="soft" x="18" y="18" width="354" height="42" rx="4"/>
+    <line x1="30" y1="104" x2="220" y2="104" class="line"/>
+    <line x1="30" y1="138" x2="320" y2="138" class="line"/>
+    <rect class="soft" x="30" y="176" width="190" height="170" rx="4"/>
+    <text x="48" y="206" class="micro">idea form</text>
+    <rect class="panel" x="48" y="226" width="140" height="28" rx="3"/>
+    <rect class="panel" x="48" y="268" width="140" height="46" rx="3"/>
+    <rect class="accent" x="48" y="326" width="116" height="26" rx="3"/>
+    <rect class="image" x="240" y="176" width="120" height="170" rx="4"/>
+    <rect class="image" x="30" y="382" width="330" height="120" rx="4"/>
+    <circle cx="88" cy="442" r="38" fill="#ff9d1e"/>
+    <line x1="150" y1="425" x2="315" y2="425" class="line"/>
+    <line x1="150" y1="460" x2="288" y2="460" class="line"/>
+    <text x="30" y="548" class="micro">showcase planet buttons</text>
+    <rect class="soft" x="30" y="570" width="96" height="74" rx="4"/>
+    <rect class="soft" x="147" y="570" width="96" height="74" rx="4"/>
+    <rect class="soft" x="264" y="570" width="96" height="74" rx="4"/>
+  </g>
+</svg>

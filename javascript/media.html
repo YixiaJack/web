@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio &amp; Video &mdash; JEPA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="js/color-mode.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="back-btn" href="../index.html">Back to Assignments</a>
+      <h1>JEPA</h1>
+      <p>Yann LeCun's Joint Embedding Predictive Architecture &mdash; a path to machines that understand the world</p>
+
+      <button class="color-mode-toggle" type="button" aria-label="Switch to dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/>
+          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/>
+          <line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/>
+          <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Introduction</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="variants.html">Variants &amp; Comparison</a></li>
+        <li><a href="media.html" class="active">Audio &amp; Video</a></li>
+        <li><a href="contact.html">Share Your View</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <article>
+        <h2>A Song, a Road Trip, a Topic in AI</h2>
+        <p>This page pairs the JEPA topic with two personal pieces of media &mdash; an original song I wrote called <em>Snow Dreaming</em>, and a short California travel video I filmed myself. Including them is partly because the assignment asks for an audio and a video element, and partly because reading about prediction in latent space is more enjoyable when something else is playing in the background.</p>
+
+        <div class="media-grid">
+          <section class="media-card">
+            <h3>Audio &mdash; <em>Snow Dreaming</em> (Original Song)</h3>
+            <audio controls preload="metadata">
+              <source src="media/snowdreaming.mp3" type="audio/mpeg">
+              <source src="media/snowdreaming.m4a" type="audio/mp4">
+              Your browser does not support the audio element.
+              <a href="media/snowdreaming.mp3">Download the audio file</a>.
+            </audio>
+            <p><em>Snow Dreaming</em> is a song I wrote and produced myself. The slow harmonic drift was my attempt at the suspended feeling of waiting for something you cannot quite see &mdash; which, on reflection, is also the loop a JEPA spends its training time in: holding a context, predicting a representation of what is hidden, then watching the actual answer arrive.</p>
+          </section>
+
+          <section class="media-card">
+            <h3>Video &mdash; California Road Trip</h3>
+            <video controls preload="metadata" poster="media/cali-poster.jpg" width="1280" height="720">
+              <source src="media/cali.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+              <a href="media/cali.mp4">Download the video file</a>.
+            </video>
+            <p>A short travel video from my own trip through California &mdash; coastline, highway, the kind of open light that makes you feel like the next turn is the answer to a question you forgot you asked. Filmed and edited by me, encoded as H.264 MP4 at 720p so it streams well across devices. A V-JEPA pretrained on enough video like this one would, in theory, learn the rough physics of camera motion, the way light shifts when you move, and the persistence of objects as they pass off-screen &mdash; without ever being told what any of those concepts are called.</p>
+          </section>
+        </div>
+      </article>
+
+      <aside>
+        <h3>Media Notes</h3>
+        <ul>
+          <li><strong>Audio</strong> &mdash; original song by Yixia Yu; MP3 with M4A fallback for broader browser support</li>
+          <li><strong>Video</strong> &mdash; personal travel footage; H.264 MP4 at 1280&times;720</li>
+          <li><strong>Controls</strong> &mdash; native HTML5 <code>controls</code> attribute, no external player</li>
+          <li><strong>Autoplay</strong> &mdash; disabled on purpose; visitors choose when to start</li>
+        </ul>
+
+        <h3>Why Include Media?</h3>
+        <p>JEPA is a thesis about how a system perceives the world. Sound and motion are the cleanest examples of inputs where pixel-level prediction would be ridiculous and representation-level prediction is exactly what you want.</p>
+      </aside>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Yixia Yu &middot; <a href="../index.html">Back to Assignments</a></p>
+    </footer>
+  </body>
+</html>

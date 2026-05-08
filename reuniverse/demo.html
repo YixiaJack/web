@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create an Idea Planet - Reuniverse</title>
+  <meta name="description" content="Create an idea planet. Type an idea, assign a real celestial body, inspect its surface and workspace, then simulate public attention.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a href="index.html" class="brand" aria-label="Reuniverse home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="13" fill="#0b3d91"/>
+          <path d="M5 19c5-7 17-9 22-3" fill="none" stroke="#f9aa43" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="10" r="2" fill="#ffffff"/>
+          <circle cx="12" cy="22" r="1.3" fill="#ffffff"/>
+        </svg>
+        Reuniverse
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="concept.html">Concept</a>
+        <a href="demo.html" aria-current="page">Try It</a>
+        <a href="workspace.html">Workspace</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section>
+      <div class="wrap">
+        <div class="demo-layout">
+          <div>
+            <p class="eyebrow">Browser demo / v0 product loop</p>
+            <h1>Create an idea planet</h1>
+            <p class="lead">
+              Publish a public idea draft, assign it a permanent real celestial
+              body, then inspect the Surface and Workspace that grow around it.
+            </p>
+
+            <form class="demo-form" id="assign-form" autocomplete="off" novalidate>
+              <div>
+                <label for="idea-title">Idea title</label>
+                <input id="idea-title" name="title" type="text" required placeholder="e.g. ai4math #4">
+              </div>
+              <div>
+                <label for="idea-summary">One-paragraph summary</label>
+                <textarea id="idea-summary" name="summary" rows="3" placeholder="What problem does it solve? What's the wedge?"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Assign celestial body</button>
+                <button class="btn" id="reset-btn" type="button">Reset draft</button>
+              </div>
+            </form>
+          </div>
+
+          <figure class="field-figure">
+            <img
+              src="images/galaxy-1x.jpg"
+              srcset="images/galaxy-1x.jpg 1x, images/galaxy-2x.jpg 2x"
+              width="700" height="500"
+              alt="A dense field of stars and galaxies used as a visual reference for the Reuniverse demo.">
+            <figcaption>Every generated planet is tied back to a real catalog body, not a decorative fiction.</figcaption>
+          </figure>
+        </div>
+
+        <dialog class="planet-card" id="planet-card" aria-live="polite" aria-labelledby="planet-card-title">
+          <div class="planet-visual" role="group" tabindex="0" aria-label="Interactive idea planet visualization. Use arrow keys or drag to rotate.">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="planet-shell">
+              <canvas class="planet-globe" width="420" height="420" aria-hidden="true"></canvas>
+              <div class="planet-atmosphere"></div>
+              <div class="planet-lights"></div>
+            </div>
+          </div>
+
+          <div class="planet-console">
+            <div class="planet-console-top">
+              <div>
+                <p class="eyebrow">Assigned identity</p>
+                <h2 class="planet-title" id="planet-card-title">Planet title</h2>
+              </div>
+              <div class="planet-card-actions">
+                <div class="stage-badge" id="stage-badge">Stage 0</div>
+                <button class="modal-close" id="close-planet-card" type="button" aria-label="Close planet card">
+                  <svg class="modal-close-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M7 7L17 17M17 7L7 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="identity-grid">
+              <div class="body-id"></div>
+              <div>
+                <span class="identity-label">Signal</span>
+                <strong class="star-count">0 public stars</strong>
+              </div>
+              <div>
+                <span class="identity-label">Vitality</span>
+                <strong class="vitality-readout">Dormant</strong>
+              </div>
+            </div>
+
+            <div class="planet-tabs" role="tablist" aria-label="Planet detail views">
+              <button id="surface-tab" class="tab-btn" role="tab" type="button" aria-selected="true" aria-controls="surface-panel">Surface</button>
+              <button id="workspace-tab" class="tab-btn" role="tab" type="button" aria-selected="false" aria-controls="workspace-panel">Workspace</button>
+            </div>
+
+            <section id="surface-panel" class="tab-panel" role="tabpanel" aria-labelledby="surface-tab">
+              <p class="civ-line"></p>
+              <p class="note"></p>
+              <div class="timeline-meter" aria-hidden="true">
+                <span class="meter-fill"></span>
+              </div>
+              <div class="star-action">
+                <button class="btn btn-primary" id="star-btn" type="button">Star as visitor</button>
+                <button class="btn" id="simulate-btn" type="button">Simulate public attention</button>
+              </div>
+            </section>
+
+            <section id="workspace-panel" class="tab-panel" role="tabpanel" aria-labelledby="workspace-tab" hidden>
+              <div class="workspace-summary">
+                <div>
+                  <span class="identity-label">Epoch</span>
+                  <strong class="epoch-name">Pre-life Draft</strong>
+                </div>
+                <div>
+                  <span class="identity-label">GitHub sync</span>
+                  <strong class="sync-state">Not connected</strong>
+                </div>
+              </div>
+
+              <div class="workspace-glance" aria-label="Workspace summary">
+                <div>
+                  <span class="identity-label">Open issues</span>
+                  <strong class="workspace-open-count">3</strong>
+                </div>
+                <div>
+                  <span class="identity-label">Board view</span>
+                  <strong>Work Tracker</strong>
+                </div>
+                <div>
+                  <span class="identity-label">Card front</span>
+                  <strong>Title / type / points</strong>
+                </div>
+              </div>
+
+              <div class="pipeline-strip" aria-label="Workspace pipelines">
+                <span>Backlog</span>
+                <span>Planning</span>
+                <span>Building</span>
+                <span>Review</span>
+                <span>Live</span>
+              </div>
+
+              <p class="workspace-summary-copy">
+                The planet card stays intentionally compact. Open the full
+                workspace for drag-and-drop pipelines, issue creation, editing,
+                story points, and deletion.
+              </p>
+
+              <a class="btn btn-primary workspace-link" id="workspace-link" href="workspace.html">Open full workspace</a>
+            </section>
+          </div>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Showcase planets</h2>
+        <p class="lead">
+          Click any pre-loaded idea to inspect it as a Reuniverse planet. Use
+          the simulation control to watch public attention move it through stages.
+        </p>
+        <div class="showcase-grid" id="showcase-grid"></div>
+        <div class="planet-hover-preview" id="planet-hover-preview" role="status" aria-live="polite" hidden></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>How the assignment works</h2>
+        <p>
+          Your title and summary are hashed (FNV-1a 32-bit, see <code>js/demo.js</code>).
+          The hash indexes into a real catalog of NASA celestial bodies in
+          <code>data/bodies.js</code>, drawn from the Exoplanet Archive, the JPL
+          Small-Body Database, and confirmed solar-system moons and comets.
+          Same idea, same body &mdash; forever.
+        </p>
+        <p>
+          In the full architecture, body assignment uses a Blake2b hash of the
+          idea's embedding plus a category lottery weighted 70/25/4/1 across
+          asteroid / exoplanet / comet / moon. The demo uses a simpler hash so
+          everything runs in your browser, but the principle is the same.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        <strong>Reuniverse</strong> &middot; A web design final project by
+        Yixia Jack &middot; <a href="https://github.com/YixiaJack">GitHub</a>
+      </p>
+      <p>
+        Body data from
+        <a href="https://exoplanetarchive.ipac.caltech.edu">NASA Exoplanet Archive</a> and
+        <a href="https://ssd.jpl.nasa.gov/sbdb.cgi">JPL Small-Body Database</a>.
+        Public domain.
+      </p>
+    </div>
+  </footer>
+
+  <script src="data/bodies.js"></script>
+  <script src="js/demo.js"></script>
+</body>
+</html>

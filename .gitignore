@@ -1,0 +1,23 @@
+# Editor / agent state
+.claude/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build / cache
+node_modules/
+*.log
+.cache/
+dist/
+build/
+
+# Archives
+*.zip
+*.tar.gz
+
+# Temp
+.tmp/

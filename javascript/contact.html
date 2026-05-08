@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your View &mdash; JEPA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="js/color-mode.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="back-btn" href="../index.html">Back to Assignments</a>
+      <h1>JEPA</h1>
+      <p>Yann LeCun's Joint Embedding Predictive Architecture &mdash; a path to machines that understand the world</p>
+
+      <button class="color-mode-toggle" type="button" aria-label="Switch to dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/>
+          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/>
+          <line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/>
+          <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Introduction</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="variants.html">Variants &amp; Comparison</a></li>
+        <li><a href="media.html">Audio &amp; Video</a></li>
+        <li><a href="contact.html" class="active">Share Your View</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <article>
+        <h2>Share Your View on JEPA</h2>
+        <p>Whether you think LeCun is on to something, or you think generative models will quietly absorb everything JEPA does anyway &mdash; I would like to hear your view. The form below goes through <strong>Formspree</strong> and lands directly in my inbox.</p>
+
+        <form class="contact-form"
+              action="https://formspree.io/f/mnnbqadb"
+              method="POST">
+          <div>
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="First or full name">
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="name@example.com">
+          </div>
+
+          <div class="full-row">
+            <label for="topic">Which part of JEPA caught your attention?</label>
+            <select id="topic" name="topic">
+              <option value="representation-space">Predicting in representation space, not pixels</option>
+              <option value="ema-teacher">The EMA target encoder &amp; collapse prevention</option>
+              <option value="i-jepa">I-JEPA &amp; image self-supervised learning</option>
+              <option value="v-jepa">V-JEPA &amp; video</option>
+              <option value="v-jepa-2">V-JEPA 2 as a world model for robotics</option>
+              <option value="lecun-amI">LeCun&rsquo;s broader AMI proposal</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+
+          <div class="full-row">
+            <label>Where do you stand on JEPA vs. autoregressive LLMs?</label>
+            <div class="radio-group">
+              <label><input type="radio" name="position" value="jepa-future"> JEPA is the right path forward</label>
+              <label><input type="radio" name="position" value="llms-win"> LLMs at scale will be enough</label>
+              <label><input type="radio" name="position" value="both"> Both, in different roles</label>
+              <label><input type="radio" name="position" value="unsure"> Genuinely unsure</label>
+            </div>
+          </div>
+
+          <div class="full-row">
+            <label>Topics you&rsquo;d like me to write about next (pick any)</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="topics" value="energy-based"> Energy-based models &amp; LeCun&rsquo;s framing</label>
+              <label><input type="checkbox" name="topics" value="planning"> Planning in latent space</label>
+              <label><input type="checkbox" name="topics" value="hierarchy"> H-JEPA &amp; hierarchical world models</label>
+              <label><input type="checkbox" name="topics" value="robotics"> JEPA in robotics &amp; embodied agents</label>
+            </div>
+          </div>
+
+          <div class="full-row">
+            <label for="message">Your Thoughts</label>
+            <textarea id="message" name="message" required placeholder="What part of JEPA excited you, confused you, or made you skeptical? Anything specific you wish this site explained better?"></textarea>
+          </div>
+
+          <div class="full-row">
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </article>
+
+      <aside>
+        <h3>What Happens Next</h3>
+        <p>Submissions go through <strong>Formspree</strong>, a lightweight form backend. I read every response. Nothing is published without your explicit permission.</p>
+
+        <h3>Privacy</h3>
+        <ul>
+          <li>Your email is only used to reply to you</li>
+          <li>No mailing list, no tracking</li>
+          <li>You can request deletion any time</li>
+        </ul>
+
+        <h3>Color Mode</h3>
+        <p>The icon at the top right toggles between a light and a dark palette. JavaScript in <code>js/color-mode.js</code> sets a <code>data-theme</code> attribute on <code>&lt;html&gt;</code> and remembers the choice in <code>localStorage</code>.</p>
+      </aside>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Yixia Yu &middot; <a href="../index.html">Back to Assignments</a></p>
+    </footer>
+  </body>
+</html>
